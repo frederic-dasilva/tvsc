@@ -15,10 +15,18 @@ TEMPLATE = app
 SOURCES += src/main.cpp\
         src/tvsc.cpp \
     src/tvscmodel.cpp \
-    src/tvscshow.cpp
+    src/tvscshow.cpp \
+    src/tvscepisode.cpp
 
 HEADERS  += src/tvsc.h \
     src/tvscmodel.h \
-    src/tvscshow.h
+    src/tvscshow.h \
+    src/tvscepisode.h
 
 FORMS    += ui/tvsc.ui
+
+LIBS += -L$$PWD/../libtvdb-0.4.0-build/lib/ -ltvdb
+
+INCLUDEPATH += $$PWD/../libtvdb-0.4.0
+INCLUDEPATH += /usr/include/kde4
+DEPENDPATH += $$PWD/../libtvdb-0.4.0

@@ -3,13 +3,17 @@
 
 #include <QObject>
 #include <QDir>
+#include "tvscepisode.h"
 
-class tvscshow : public QObject
+#include "client.h"
+
+class tvscshow
 {
-    Q_OBJECT
+
 public:
-    explicit tvscshow(QObject *parent = 0);
-    tvscshow(QString &name,QObject *parent = 0);
+
+    tvscshow(QObject *parent = NULL);
+    tvscshow(QString &name, QObject *parent = NULL);
 
     const bool isValid() const;
 
@@ -17,9 +21,9 @@ public:
 
     bool operator==(const tvscshow &one);
 
-    const QList<QString> files() const;
+    const QList<tvscepisode> episodes() const;
 
-    void addFile(QString str);
+    void addEpisode(tvscepisode &);
 signals:
 
 public slots:
@@ -27,7 +31,14 @@ public slots:
 private:
     QString _name;
 
-    QList<QString> _fileNames;
+    QList<tvscepisode> _episodes;
+
+    QObject *_parent;
+    Tvdb::Client *_ptvdbclient;
 };
+
+
+QDebug operator<< (QDebug d, const tvscshow &model);
+
 
 #endif // TVSCSHOW_H

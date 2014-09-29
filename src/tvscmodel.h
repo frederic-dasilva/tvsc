@@ -28,12 +28,12 @@ signals:
 public slots:
 
 private:
-    tvscshow* show(QString &str);
+    const tvscshow &show(QString &str);
 
 private:
     QStringList _extension;
 
-    QMap<QString,tvscshow*> _show;
+    QMap<QString,tvscshow> _show;
 
     QList<QFileInfo> _files;
 };

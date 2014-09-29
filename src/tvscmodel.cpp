@@ -9,11 +9,12 @@
 #include <QRegularExpression>
 #include <QByteArray>
 #include <QTime>
+#include "tvscepisode.h"
 
 tvscmodel::tvscmodel(QObject *parent) :
     QObject(parent)
 {
-    const QString path("my_path");
+    const QString path("/home/rift/thalassa/Commun/EZTV/");
 
     _extension << "avi" << "mkv" << "mp4" << "srt";
 
@@ -32,28 +33,30 @@ tvscmodel::tvscmodel(QObject *parent) :
     foreach (QFileInfo file,_files) {
         QRegularExpressionMatch match = re.match(file.fileName());
         if (match.hasMatch()) {
-            QString sShow = match.captured(1).replace("."," ").simplified();
-            QString sSeason = match.captured(2);
-            QString sEpisode = match.captured(3);
+            tvscepisode::tvscepisodeinfo episode;
+            episode._show = match.captured(1).replace("."," ").simplified();
+            episode._season = match.captured(2);
+            episode._episode = match.captured(3);
+            episode._fileInfo = file;
 
-            if(!_show.contains(sShow)) {
-                _show[sShow] = new tvscshow(sShow,this);
+            if(!_show.contains(episode._show)) {
+                _show[episode._show] = tvscshow(episode._show,this);
             }
-            tvscshow *pShow = show(sShow);
-            pShow->addFile(file.fileName());
+            tvscshow &show = _show[episode._show];
+            tvscepisode epi(episode);
+            show.addEpisode(epi);
 
         }
     }
 
 
-    foreach(tvscshow *ptr,_show)
+    foreach(const tvscshow &ptr,_show)
     {
-        qDebug() << ptr->name();
-        qDebug() << ptr->files();
+        qDebug() << ptr;
     }
 }
 
-tvscshow* tvscmodel::show(QString &str)
+const tvscshow& tvscmodel::show(QString &str)
 {
     return _show[str];
 }

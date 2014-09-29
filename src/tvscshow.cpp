@@ -1,15 +1,17 @@
 #include "tvscshow.h"
+#include <QDebug>
+
 
 tvscshow::tvscshow(QObject *parent)
-    :QObject(parent),_name()
+    :_name(QString::null),_parent(parent)
 {
+ _ptvdbclient = new Tvdb::Client(parent);
 }
 
-
-tvscshow::tvscshow(QString &name, QObject *parent)
-    :QObject(parent),_name(name)
+tvscshow::tvscshow(QString &name,QObject *parent)
+    :_name(name),_parent(parent)
 {
-
+   _ptvdbclient = new Tvdb::Client(parent);
 }
 
 
@@ -28,12 +30,23 @@ bool tvscshow::operator==(const tvscshow &one)
     return (one.name() == name());
 }
 
-const QList<QString> tvscshow::files() const
+const QList<tvscepisode> tvscshow::episodes() const
 {
-    return _fileNames;
+    return _episodes;
 }
 
-void tvscshow::addFile(QString str)
+void tvscshow::addEpisode(tvscepisode &episode)
 {
-    _fileNames << str;
+    _episodes << episode;
+}
+
+
+QDebug operator<< (QDebug d, const tvscshow &model) {
+    d << model.name();
+    const QList<tvscepisode> list = model.episodes();
+    foreach(tvscepisode ptr,list) {
+        qDebug() << ptr;
+    }
+
+    return d;
 }
